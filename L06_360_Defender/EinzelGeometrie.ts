@@ -47,8 +47,13 @@ namespace Endabgabe_360_Defender {
       else
       this.mtxLocal.translateX(  1 / 4 * ƒ.Loop.timeFrameReal / 1000);
     }
+    
 
-    private activatePhysics(_event: ƒ.EventPhysics): void {
+    public triggerPhysic(): void {
+      this.activatePhysics();
+    }
+
+    private activatePhysics(): void {
       console.log("Col");
       this.rigidbody.physicsType = ƒ.PHYSICS_TYPE.DYNAMIC;
     }

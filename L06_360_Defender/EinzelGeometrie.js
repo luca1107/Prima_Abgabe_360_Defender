@@ -34,7 +34,10 @@ var Endabgabe_360_Defender;
             else
                 this.mtxLocal.translateX(1 / 4 * ƒ.Loop.timeFrameReal / 1000);
         }
-        activatePhysics(_event) {
+        triggerPhysic() {
+            this.activatePhysics();
+        }
+        activatePhysics() {
             console.log("Col");
             this.rigidbody.physicsType = ƒ.PHYSICS_TYPE.DYNAMIC;
         }

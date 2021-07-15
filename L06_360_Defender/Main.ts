@@ -176,6 +176,14 @@ namespace Endabgabe_360_Defender {
 
     if (_event.code ==  ƒ.KEYBOARD_CODE.SPACE ) {
       let kugel: Kugeln = new Kugeln("Kugel", kugel_spawner.mtxWorld.translation, ƒ.Vector3.ONE(.1), kugel_spawner.mtxWorld.rotation);
+
+      for (let lanes of lanesRoot.getChildren() as QuadLane[]) {
+        for (let einzelGeo of lanes.getChildren() as Einzelgeometrie[]) {
+          einzelGeo.triggerPhysic();  // Hier der Versuch über Tasteneingabe die Physik zu triggern
+          //console.log(einzelGeo.name);
+        }
+      }
+
       gameRoot.addChild(kugel);
       gameRoot.getComponent(ƒ.ComponentAudio).play(true);
       ƒ.Physics.adjustTransforms(gameRoot);

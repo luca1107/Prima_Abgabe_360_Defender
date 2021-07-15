@@ -127,6 +127,12 @@ var Endabgabe_360_Defender;
     function handler_Key_Pressed(_event) {
         if (_event.code == ƒ.KEYBOARD_CODE.SPACE) {
             let kugel = new Endabgabe_360_Defender.Kugeln("Kugel", kugel_spawner.mtxWorld.translation, ƒ.Vector3.ONE(.1), kugel_spawner.mtxWorld.rotation);
+            for (let lanes of lanesRoot.getChildren()) {
+                for (let einzelGeo of lanes.getChildren()) {
+                    einzelGeo.triggerPhysic(); // Hier der Versuch über Tasteneingabe die Physik zu triggern
+                    //console.log(einzelGeo.name);
+                }
+            }
             gameRoot.addChild(kugel);
             gameRoot.getComponent(ƒ.ComponentAudio).play(true);
             ƒ.Physics.adjustTransforms(gameRoot);
