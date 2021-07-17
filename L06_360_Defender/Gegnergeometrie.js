@@ -10,18 +10,20 @@ var Endabgabe_360_Defender;
             this.mtxLocal.translateX(_pos.x);
             this.mtxLocal.translateY(_pos.y);
             this.mtxLocal.translateZ(_pos.z);
-            let cmpMesh = new ƒ.ComponentMesh(Endabgabe_360_Defender.Einzelgeometrie.mesh);
-            cmpMesh.mtxPivot.scaleX(_scale.x);
-            cmpMesh.mtxPivot.scaleY(_scale.y);
-            cmpMesh.mtxPivot.scaleZ(_scale.z);
             //Setup der Gegnerstruktur
             for (let i = 0; i < _count; i++) {
                 for (let j = 0; j < _count; j++) {
                     let pos = new ƒ.Vector3(0, j, i);
-                    this.appendChild(new Endabgabe_360_Defender.Einzelgeometrie(_name, pos, _scale, _dir));
+                    let _type = Gegnergeometrie.getRandomEnum(Endabgabe_360_Defender.CUBE_TYPE);
+                    this.appendChild(new Endabgabe_360_Defender.Einzelgeometrie(_name, pos, _scale, _dir, _type));
                 }
             }
             //this.direction = _dir;
+        }
+        static getRandomEnum(_enum) {
+            let randomKey = Object.keys(_enum)[Math.floor(Math.random() * Object.keys(_enum).length)];
+            console.log(randomKey);
+            return _enum[randomKey];
         }
         move() {
             if (!this.direction)

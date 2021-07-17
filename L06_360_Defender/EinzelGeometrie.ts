@@ -1,13 +1,23 @@
 namespace Endabgabe_360_Defender {
   import ƒ = FudgeCore;
 
+  export enum CUBE_TYPE {
+    GREEN = "Green",
+    RED = "Red",
+    BLUE = "Blue",
+    YELLOW = "Yellow",
+    MAGENTA = "Magenta",
+    CYAN = "Cyan"
+}
+  type Materials = Map<CUBE_TYPE, ƒ.Material>;
+
   export class Einzelgeometrie extends ƒ.Node {
-    static mesh: ƒ.Mesh = new ƒ.MeshCube("Cube");
-    static material: ƒ.Material = new ƒ.Material("Black", ƒ.ShaderUniColor, new ƒ.CoatColored(new ƒ.Color(0, 0, 1, 1)));
+    private static materials: Materials = Einzelgeometrie.createMaterials();
+    private static mesh: ƒ.Mesh = new ƒ.MeshCube("Cube");
     rigidbody: ƒ.ComponentRigidbody = new ƒ.ComponentRigidbody(1, ƒ.PHYSICS_TYPE.KINEMATIC, ƒ.COLLIDER_TYPE.CUBE, ƒ.PHYSICS_GROUP.DEFAULT);
     direction: boolean ;
 
-    constructor(_name: string, _pos: ƒ.Vector3, _scale: ƒ.Vector3, _dir: boolean ) {
+    constructor(_name: string, _pos: ƒ.Vector3, _scale: ƒ.Vector3, _dir: boolean, _type: CUBE_TYPE ) {
       super(_name);
 
       this.addComponent(new ƒ.ComponentTransform());
@@ -25,10 +35,22 @@ namespace Endabgabe_360_Defender {
 
       this.addComponent(cmpMesh);
 
-      this.addComponent(new ƒ.ComponentMaterial(Einzelgeometrie.material));
+      let cmpMaterial: ƒ.ComponentMaterial = new ƒ.ComponentMaterial(Einzelgeometrie.materials.get(_type));
+      this.addComponent(cmpMaterial);
       this.addComponent(this.rigidbody);
       this.rigidbody.addEventListener(ƒ.EVENT_PHYSICS.COLLISION_ENTER, this.handleCollision);
     }
+
+    private static createMaterials(): Materials {
+      return new Map([
+          [CUBE_TYPE.RED, new ƒ.Material(CUBE_TYPE.RED, ƒ.ShaderUniColor, new ƒ.CoatColored(ƒ.Color.CSS("RED")))],
+          [CUBE_TYPE.GREEN, new ƒ.Material(CUBE_TYPE.GREEN, ƒ.ShaderUniColor, new ƒ.CoatColored(ƒ.Color.CSS("GREEN")))],
+          [CUBE_TYPE.BLUE, new ƒ.Material(CUBE_TYPE.BLUE, ƒ.ShaderUniColor, new ƒ.CoatColored(ƒ.Color.CSS("BLUE")))],
+          [CUBE_TYPE.MAGENTA, new ƒ.Material(CUBE_TYPE.MAGENTA, ƒ.ShaderUniColor, new ƒ.CoatColored(ƒ.Color.CSS("MAGENTA")))],
+          [CUBE_TYPE.YELLOW, new ƒ.Material(CUBE_TYPE.YELLOW, ƒ.ShaderUniColor, new ƒ.CoatColored(ƒ.Color.CSS("YELLOW")))],
+          [CUBE_TYPE.CYAN, new ƒ.Material(CUBE_TYPE.CYAN, ƒ.ShaderUniColor, new ƒ.CoatColored(ƒ.Color.CSS("CYAN")))]
+      ]);
+  }
 
     public setTransform(_pos: ƒ.Vector3, _rot: ƒ.Vector3): void {
       this.mtxLocal.translateX(_pos.x);
@@ -40,6 +62,8 @@ namespace Endabgabe_360_Defender {
       this.mtxLocal.rotateZ(_rot.z);
 
     }
+
+    
 
     public move(): void {
       if (!this.direction)

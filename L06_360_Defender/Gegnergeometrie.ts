@@ -15,24 +15,25 @@ namespace Endabgabe_360_Defender {
       this.mtxLocal.translateY(_pos.y);
       this.mtxLocal.translateZ(_pos.z);
 
-      let cmpMesh: ƒ.ComponentMesh = new ƒ.ComponentMesh(Einzelgeometrie.mesh);
-      cmpMesh.mtxPivot.scaleX(_scale.x);
-      cmpMesh.mtxPivot.scaleY(_scale.y);
-      cmpMesh.mtxPivot.scaleZ(_scale.z);
-
-
       //Setup der Gegnerstruktur
       for ( let i: number = 0; i < _count; i++) {
 
         for (let j: number = 0; j < _count; j++) {
 
           let pos: ƒ.Vector3 = new ƒ.Vector3(0, j, i);
+          let _type: CUBE_TYPE =  Gegnergeometrie.getRandomEnum(CUBE_TYPE);
 
-          this.appendChild(new Einzelgeometrie(_name, pos, _scale, _dir));       
+          this.appendChild(new Einzelgeometrie(_name, pos, _scale, _dir, _type));       
         }
       }
       //this.direction = _dir;
     }
+
+    private static getRandomEnum<T>(_enum: {[key: string]: T}): T {
+      let randomKey: string = Object.keys(_enum)[Math.floor(Math.random() * Object.keys(_enum).length)];
+      console.log(randomKey);
+      return _enum[randomKey];
+  }
 
     public move(): void {
       if (!this.direction)
@@ -40,6 +41,8 @@ namespace Endabgabe_360_Defender {
       else
       this.mtxLocal.translateX(  1 / 4 * ƒ.Loop.timeFrameReal / 1000);
     }
+
+    
     
 
 
