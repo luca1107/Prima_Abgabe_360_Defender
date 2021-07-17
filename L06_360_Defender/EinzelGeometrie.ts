@@ -27,7 +27,7 @@ namespace Endabgabe_360_Defender {
 
       this.addComponent(new ƒ.ComponentMaterial(Einzelgeometrie.material));
       this.addComponent(this.rigidbody);
-      this.rigidbody.addEventListener(ƒ.EVENT_PHYSICS.COLLISION_ENTER, this.activatePhysics);
+      this.rigidbody.addEventListener(ƒ.EVENT_PHYSICS.COLLISION_ENTER, this.handleCollision);
     }
 
     public setTransform(_pos: ƒ.Vector3, _rot: ƒ.Vector3): void {
@@ -47,11 +47,16 @@ namespace Endabgabe_360_Defender {
       else
       this.mtxLocal.translateX(  1 / 4 * ƒ.Loop.timeFrameReal / 1000);
     }
-    
 
-    public triggerPhysic(): void {
-      this.activatePhysics();
+    public handleCollision (_event: ƒ.EventPhysics): void
+    {
+      if(_event.cmpRigidbody.getContainer().name == "Kugel")
+      {
+        /*let root: ƒ.Node = _event.cmpRigidbody.getContainer().getParent();s
+        root.removeChild(_event.cmpRigidbody.getContainer());*/
+      }
     }
+    
 
     private activatePhysics(): void {
       console.log("Col");

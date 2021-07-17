@@ -18,7 +18,7 @@ var Endabgabe_360_Defender;
             this.addComponent(cmpMesh);
             this.addComponent(new ƒ.ComponentMaterial(Einzelgeometrie.material));
             this.addComponent(this.rigidbody);
-            this.rigidbody.addEventListener("ColliderEnteredCollision" /* COLLISION_ENTER */, this.activatePhysics);
+            this.rigidbody.addEventListener("ColliderEnteredCollision" /* COLLISION_ENTER */, this.handleCollision);
         }
         setTransform(_pos, _rot) {
             this.mtxLocal.translateX(_pos.x);
@@ -34,8 +34,11 @@ var Endabgabe_360_Defender;
             else
                 this.mtxLocal.translateX(1 / 4 * ƒ.Loop.timeFrameReal / 1000);
         }
-        triggerPhysic() {
-            this.activatePhysics();
+        handleCollision(_event) {
+            if (_event.cmpRigidbody.getContainer().name == "Kugel") {
+                /*let root: ƒ.Node = _event.cmpRigidbody.getContainer().getParent();s
+                root.removeChild(_event.cmpRigidbody.getContainer());*/
+            }
         }
         activatePhysics() {
             console.log("Col");

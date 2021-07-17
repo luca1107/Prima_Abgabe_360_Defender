@@ -66,19 +66,23 @@ var Endabgabe_360_Defender;
                 //Setup LanePositions
                 case 0:
                     lane.setTransform(new ƒ.Vector3(-5, 0, 1), new ƒ.Vector3(0, 0, 0));
-                    lane.addChild(new Endabgabe_360_Defender.Einzelgeometrie("Test_1", new ƒ.Vector3(-3, 0, 1), new ƒ.Vector3(1, 1, 1), false));
+                    lane.addChild(new Endabgabe_360_Defender.Gegnergeometrie("enemy", new ƒ.Vector3(-3, 0, 1), new ƒ.Vector3(1, 1, 1), true, 2));
+                    //lane.addChild(new Einzelgeometrie("Test_1", new ƒ.Vector3(-3, 0, 1), new ƒ.Vector3(1, 1, 1), false));
                     break;
                 case 1:
                     lane.setTransform(new ƒ.Vector3(0, 5, 1), new ƒ.Vector3(0, 0, 90));
-                    lane.addChild(new Endabgabe_360_Defender.Einzelgeometrie("Test_2", new ƒ.Vector3(3, 0, 1), new ƒ.Vector3(1, 1, 1), false));
+                    lane.addChild(new Endabgabe_360_Defender.Gegnergeometrie("enemy", new ƒ.Vector3(3, 0, 1), new ƒ.Vector3(1, 1, 1), false, 2));
+                    //lane.addChild(new Einzelgeometrie("Test_2", new ƒ.Vector3(3, 0, 1), new ƒ.Vector3(1, 1, 1), false));
                     break;
                 case 2:
                     lane.setTransform(new ƒ.Vector3(5, 0, 1), new ƒ.Vector3(0, 0, 0));
-                    lane.addChild(new Endabgabe_360_Defender.Einzelgeometrie("Test_3", new ƒ.Vector3(3, 0, 1), new ƒ.Vector3(1, 1, 1), false));
+                    lane.addChild(new Endabgabe_360_Defender.Gegnergeometrie("enemy", new ƒ.Vector3(3, 0, 1), new ƒ.Vector3(1, 1, 1), false, 2));
+                    //lane.addChild(new Einzelgeometrie("Test_3", new ƒ.Vector3(3, 0, 1), new ƒ.Vector3(1, 1, 1), false));
                     break;
                 case 3:
                     lane.setTransform(new ƒ.Vector3(0, -5, 1), new ƒ.Vector3(0, 0, 90));
-                    lane.addChild(new Endabgabe_360_Defender.Einzelgeometrie("Test_4", new ƒ.Vector3(-3, 0, 1), new ƒ.Vector3(1, 1, 1), true));
+                    lane.addChild(new Endabgabe_360_Defender.Gegnergeometrie("enemy", new ƒ.Vector3(-3, 0, 1), new ƒ.Vector3(1, 1, 1), true, 2));
+                    //lane.addChild(new Einzelgeometrie("Test_4", new ƒ.Vector3(-3, 0, 1), new ƒ.Vector3(1, 1, 1), true));
                     break;
             }
             lanesRoot.appendChild(lane);
@@ -127,12 +131,12 @@ var Endabgabe_360_Defender;
     function handler_Key_Pressed(_event) {
         if (_event.code == ƒ.KEYBOARD_CODE.SPACE) {
             let kugel = new Endabgabe_360_Defender.Kugeln("Kugel", kugel_spawner.mtxWorld.translation, ƒ.Vector3.ONE(.1), kugel_spawner.mtxWorld.rotation);
-            for (let lanes of lanesRoot.getChildren()) {
-                for (let einzelGeo of lanes.getChildren()) {
-                    einzelGeo.triggerPhysic(); // Hier der Versuch über Tasteneingabe die Physik zu triggern
-                    //console.log(einzelGeo.name);
-                }
-            }
+            /*for (let lanes of lanesRoot.getChildren() as QuadLane[]) {
+              for (let einzelGeo of lanes.getChildren() as Einzelgeometrie[]) {
+                einzelGeo.triggerPhysic();  // Hier der Versuch über Tasteneingabe die Physik zu triggern
+                //console.log(einzelGeo.name);
+              }
+            }*/
             gameRoot.addChild(kugel);
             gameRoot.getComponent(ƒ.ComponentAudio).play(true);
             ƒ.Physics.adjustTransforms(gameRoot);
@@ -146,8 +150,8 @@ var Endabgabe_360_Defender;
     }
     function update(_event) {
         for (let lanes of lanesRoot.getChildren()) {
-            for (let einzelGeo of lanes.getChildren()) {
-                einzelGeo.move();
+            for (let gegnerGeo of lanes.getChildren()) {
+                gegnerGeo.move();
                 //console.log(einzelGeo.name);
             }
             //Bewegung der Geometrie etc.

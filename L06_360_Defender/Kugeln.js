@@ -5,18 +5,34 @@ var Endabgabe_360_Defender;
     class Kugeln extends ƒ.Node {
         constructor(_name, _pos, _scale, _rot) {
             super(_name);
+            this.rigidbody = new ƒ.ComponentRigidbody(2, ƒ.PHYSICS_TYPE.DYNAMIC, ƒ.COLLIDER_TYPE.SPHERE, ƒ.PHYSICS_GROUP.DEFAULT);
+            this.velocity = new ƒ.Vector3(_pos.x, _pos.y * 2, .3);
             this.addComponent(new ƒ.ComponentTransform());
             this.mtxLocal.translate(_pos);
             this.mtxLocal.scale(_scale);
             this.mtxLocal.rotate(_rot);
-            this.addComponent(new ƒ.ComponentRigidbody(2, ƒ.PHYSICS_TYPE.DYNAMIC, ƒ.COLLIDER_TYPE.SPHERE, ƒ.PHYSICS_GROUP.DEFAULT));
-            this.getComponent(ƒ.ComponentRigidbody).restitution = 2;
+            this.addComponent(this.rigidbody);
+            this.rigidbody.restitution = 2;
             //this.getComponent(ƒ.ComponentRigidbody).rotationInfluenceFactor = ƒ.Vector3.ZERO();
+            this.rigidbody.addEventListener("ColliderEnteredCollision" /* COLLISION_ENTER */, this.handleCollision);
             let cmpMesh = new ƒ.ComponentMesh(Kugeln.mesh);
             this.addComponent(cmpMesh);
             this.addComponent(new ƒ.ComponentMaterial(Kugeln.material));
-            this.getComponent(ƒ.ComponentRigidbody).setVelocity(new ƒ.Vector3(_pos.x, _pos.y * 2, .3));
+            this.getComponent(ƒ.ComponentRigidbody).setVelocity(this.velocity);
             this.getComponent(ƒ.ComponentRigidbody).setPosition(new ƒ.Vector3(0, 0, 0));
+        }
+        handleCollision(_event) {
+            let name = _event.cmpRigidbody.getContainer().name;
+            console.log(_event.cmpRigidbody.getContainer().name);
+            switch (name) {
+                case "boden":
+                    break;
+                case "enemy":
+                    _event.cmpRigidbody.getContainer().getComponent(ƒ.ComponentRigidbody).physicsType = ƒ.PHYSICS_TYPE.DYNAMIC;
+                    console.log("Vel" + this.velocity.x);
+                    _event.cmpRigidbody.getContainer().getComponent(ƒ.ComponentRigidbody).setVelocity(this.velocity);
+                    break;
+            }
         }
     }
     Kugeln.mesh = new ƒ.MeshSphere("Sphere");
