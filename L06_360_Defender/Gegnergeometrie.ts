@@ -16,11 +16,14 @@ namespace Endabgabe_360_Defender {
       this.mtxLocal.translateZ(_pos.z);
 
       //Setup der Gegnerstruktur
-      for ( let i: number = 0; i < _count; i++) {
+      for ( let i: number = 1; i < _count+1; i++) {
 
-        for (let j: number = 0; j < _count; j++) {
+        for (let j: number = 1; j < _count+1; j++) {
 
-          let pos: ƒ.Vector3 = new ƒ.Vector3(0, j, i);
+          let rand_1 :number = Math.round(Math.random()*j);
+          let rand_2 :number = Math.round(Math.random()*i);
+
+          let pos: ƒ.Vector3 = new ƒ.Vector3(0, rand_1, rand_2);
           let _type: CUBE_TYPE =  Gegnergeometrie.getRandomEnum(CUBE_TYPE);
 
           this.appendChild(new Einzelgeometrie(_name, pos, _scale, _dir, _type));       

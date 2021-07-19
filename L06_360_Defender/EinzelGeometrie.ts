@@ -79,11 +79,18 @@ namespace Endabgabe_360_Defender {
         /*let root: ƒ.Node = _event.cmpRigidbody.getContainer().getParent();s
         root.removeChild(_event.cmpRigidbody.getContainer());*/
       }
+
+      if(_event.cmpRigidbody.getContainer().name == "boden")
+      {
+        /*this.removeComponent(new ƒ.ComponentMesh);
+        this.rigidbody.activate(false);
+        this.activate(false);*/
+      }
     }
     
 
     private activatePhysics(): void {
-      console.log("Col");
+      //console.log("Col");
       this.rigidbody.physicsType = ƒ.PHYSICS_TYPE.DYNAMIC;
     }
 

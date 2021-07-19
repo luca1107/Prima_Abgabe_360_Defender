@@ -13,7 +13,7 @@ namespace Endabgabe_360_Defender {
     constructor(_name: string, _pos: ƒ.Vector3, _scale: ƒ.Vector3, _rot: ƒ.Vector3) {
       super(_name);
 
-      this.velocity = new ƒ.Vector3(_pos.x, _pos.y * 2, .3);
+      this.velocity = new ƒ.Vector3(_pos.x * 1.5 , _pos.y * 1.5 , .3);
 
       this.addComponent(new ƒ.ComponentTransform());
       this.mtxLocal.translate(_pos);
@@ -40,7 +40,7 @@ namespace Endabgabe_360_Defender {
     {
       let name: string = _event.cmpRigidbody.getContainer().name;
 
-      console.log(_event.cmpRigidbody.getContainer().name);
+      //console.log(_event.cmpRigidbody.getContainer().name);
       
       switch (name)
       {
@@ -48,9 +48,10 @@ namespace Endabgabe_360_Defender {
         break;
 
         case "enemy":
-        _event.cmpRigidbody.getContainer().getComponent(ƒ.ComponentRigidbody).physicsType = ƒ.PHYSICS_TYPE.DYNAMIC;
-        console.log("Vel" + this.velocity.x);
-        _event.cmpRigidbody.getContainer().getComponent(ƒ.ComponentRigidbody).setVelocity(this.velocity);
+        _event.cmpRigidbody.physicsType = ƒ.PHYSICS_TYPE.DYNAMIC;
+        _event.cmpRigidbody.applyImpulseAtPoint(new ƒ.Vector3
+          (_event.collisionNormal.x * _event.normalImpulse/3, _event.collisionNormal.y * _event.normalImpulse/3,
+            _event.collisionNormal.z * _event.normalImpulse/3), _event.collisionPoint);
 
         break;
       }

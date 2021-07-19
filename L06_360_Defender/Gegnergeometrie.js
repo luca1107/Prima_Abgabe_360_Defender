@@ -11,9 +11,11 @@ var Endabgabe_360_Defender;
             this.mtxLocal.translateY(_pos.y);
             this.mtxLocal.translateZ(_pos.z);
             //Setup der Gegnerstruktur
-            for (let i = 0; i < _count; i++) {
-                for (let j = 0; j < _count; j++) {
-                    let pos = new ƒ.Vector3(0, j, i);
+            for (let i = 1; i < _count + 1; i++) {
+                for (let j = 1; j < _count + 1; j++) {
+                    let rand_1 = Math.round(Math.random() * j);
+                    let rand_2 = Math.round(Math.random() * i);
+                    let pos = new ƒ.Vector3(0, rand_1, rand_2);
                     let _type = Gegnergeometrie.getRandomEnum(Endabgabe_360_Defender.CUBE_TYPE);
                     this.appendChild(new Endabgabe_360_Defender.Einzelgeometrie(_name, pos, _scale, _dir, _type));
                 }
