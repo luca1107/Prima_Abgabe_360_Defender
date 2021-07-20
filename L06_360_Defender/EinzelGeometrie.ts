@@ -12,13 +12,16 @@ namespace Endabgabe_360_Defender {
   type Materials = Map<CUBE_TYPE, ƒ.Material>;
 
   export class Einzelgeometrie extends ƒ.Node {
+    static _root:ƒ.Node;
     private static materials: Materials = Einzelgeometrie.createMaterials();
     private static mesh: ƒ.Mesh = new ƒ.MeshCube("Cube");
     rigidbody: ƒ.ComponentRigidbody = new ƒ.ComponentRigidbody(1, ƒ.PHYSICS_TYPE.KINEMATIC, ƒ.COLLIDER_TYPE.CUBE, ƒ.PHYSICS_GROUP.DEFAULT);
     direction: boolean ;
 
-    constructor(_name: string, _pos: ƒ.Vector3, _scale: ƒ.Vector3, _dir: boolean, _type: CUBE_TYPE ) {
+    constructor(_name: string, _pos: ƒ.Vector3, _scale: ƒ.Vector3, _dir: boolean, _type: CUBE_TYPE, root: ƒ.Node) {
       super(_name);
+
+      Einzelgeometrie._root = root;
 
       this.addComponent(new ƒ.ComponentTransform());
       this.mtxLocal.translateX(_pos.x);
@@ -82,9 +85,8 @@ namespace Endabgabe_360_Defender {
 
       if(_event.cmpRigidbody.getContainer().name == "boden")
       {
-        /*this.removeComponent(new ƒ.ComponentMesh);
-        this.rigidbody.activate(false);
-        this.activate(false);*/
+        console.log("BodenKoll");
+        Einzelgeometrie._root.removeChild(this);
       }
     }
     

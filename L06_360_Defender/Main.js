@@ -79,25 +79,25 @@ var Endabgabe_360_Defender;
         wand_1.addComponent(cmpMaterialWand_1);
         wand_1.addComponent(cmpMeshWand_1);
         wand_1.addComponent(new ƒ.ComponentRigidbody(1, ƒ.PHYSICS_TYPE.STATIC, ƒ.COLLIDER_TYPE.CUBE, ƒ.PHYSICS_GROUP.DEFAULT));
-        wand_1.getComponent(ƒ.ComponentRigidbody).addEventListener("ColliderEnteredCollision" /* COLLISION_ENTER */, handleCollision);
+        //wand_1.getComponent(ƒ.ComponentRigidbody).addEventListener(ƒ.EVENT_PHYSICS.COLLISION_ENTER, handleCollision);
         let wand_2 = new ƒ.Node("Wand");
         wand_2.addComponent(transformWand_2);
         wand_2.addComponent(cmpMaterialWand_2);
         wand_2.addComponent(cmpMeshWand_2);
         wand_2.addComponent(new ƒ.ComponentRigidbody(1, ƒ.PHYSICS_TYPE.STATIC, ƒ.COLLIDER_TYPE.CUBE, ƒ.PHYSICS_GROUP.DEFAULT));
-        wand_2.getComponent(ƒ.ComponentRigidbody).addEventListener("ColliderEnteredCollision" /* COLLISION_ENTER */, handleCollision);
+        //wand_2.getComponent(ƒ.ComponentRigidbody).addEventListener(ƒ.EVENT_PHYSICS.COLLISION_ENTER, handleCollision);
         let wand_3 = new ƒ.Node("Wand");
         wand_3.addComponent(transformWand_3);
         wand_3.addComponent(cmpMaterialWand_3);
         wand_3.addComponent(cmpMeshWand_3);
         wand_3.addComponent(new ƒ.ComponentRigidbody(1, ƒ.PHYSICS_TYPE.STATIC, ƒ.COLLIDER_TYPE.CUBE, ƒ.PHYSICS_GROUP.DEFAULT));
-        wand_3.getComponent(ƒ.ComponentRigidbody).addEventListener("ColliderEnteredCollision" /* COLLISION_ENTER */, handleCollision);
+        //wand_3.getComponent(ƒ.ComponentRigidbody).addEventListener(ƒ.EVENT_PHYSICS.COLLISION_ENTER, handleCollision);
         let wand_4 = new ƒ.Node("Wand");
         wand_4.addComponent(transformWand_4);
         wand_4.addComponent(cmpMaterialWand_4);
         wand_4.addComponent(cmpMeshWand_4);
         wand_4.addComponent(new ƒ.ComponentRigidbody(1, ƒ.PHYSICS_TYPE.STATIC, ƒ.COLLIDER_TYPE.CUBE, ƒ.PHYSICS_GROUP.DEFAULT));
-        wand_4.getComponent(ƒ.ComponentRigidbody).addEventListener("ColliderEnteredCollision" /* COLLISION_ENTER */, handleCollision);
+        //wand_4.getComponent(ƒ.ComponentRigidbody).addEventListener(ƒ.EVENT_PHYSICS.COLLISION_ENTER, handleCollision);
         waende.addChild(wand_1);
         waende.addChild(wand_2);
         waende.addChild(wand_3);
@@ -186,38 +186,36 @@ var Endabgabe_360_Defender;
         viewport.draw();
     }
     function handleCollision(_event) {
-        /*console.log("Kol mit Boden");
-        _event.cmpRigidbody.activate(false);
-        _event.cmpRigidbody.setScaling(ƒ.Vector3.ZERO());
-        //gameRoot.removeChild(_event.cmpRigidbody.getContainer());
-        */
         if (_event.cmpRigidbody.getContainer().name == "enemy")
             score++;
-        if (score % 10 == 0 && score > 0)
+        console.log("Kol mit Boden");
+        _event.cmpRigidbody.activate(false);
+        _event.cmpRigidbody.setScaling(ƒ.Vector3.ZERO());
+        gameRoot.removeChild(_event.cmpRigidbody.getContainer());
+        if (score % 15 == 0 && score > 0)
             createNewEnemys();
         document.getElementById("myScore").innerHTML = "Score : " + score;
     }
     function createNewEnemys() {
         let lanes = lanesRoot.getChildren();
-        for (let i = 0; i < 4; i++) {
-            switch (i) {
-                case 0:
-                    lanes[i].removeAllChildren();
-                    lanes[i].addChild(new Endabgabe_360_Defender.Gegnergeometrie("enemy", new ƒ.Vector3(-3, 0, 1), new ƒ.Vector3(1, 1, 1), true, 2));
-                    break;
-                case 1:
-                    lanes[i].removeAllChildren();
-                    lanes[i].addChild(new Endabgabe_360_Defender.Gegnergeometrie("enemy", new ƒ.Vector3(3, 0, 1), new ƒ.Vector3(1, 1, 1), false, 2));
-                    break;
-                case 2:
-                    lanes[i].removeAllChildren();
-                    lanes[i].addChild(new Endabgabe_360_Defender.Gegnergeometrie("enemy", new ƒ.Vector3(3, 0, 1), new ƒ.Vector3(1, 1, 1), false, 2));
-                    break;
-                case 3:
-                    lanes[i].removeAllChildren();
-                    lanes[i].addChild(new Endabgabe_360_Defender.Gegnergeometrie("enemy", new ƒ.Vector3(-3, 0, 1), new ƒ.Vector3(1, 1, 1), true, 2));
-                    break;
-            }
+        let i = Math.round(Math.random() * 3);
+        switch (i) {
+            case 0:
+                lanes[i].removeAllChildren();
+                lanes[i].addChild(new Endabgabe_360_Defender.Gegnergeometrie("enemy", new ƒ.Vector3(-3, 0, 1), new ƒ.Vector3(1, 1, 1), true, 2));
+                break;
+            case 1:
+                lanes[i].removeAllChildren();
+                lanes[i].addChild(new Endabgabe_360_Defender.Gegnergeometrie("enemy", new ƒ.Vector3(3, 0, 1), new ƒ.Vector3(1, 1, 1), false, 2));
+                break;
+            case 2:
+                lanes[i].removeAllChildren();
+                lanes[i].addChild(new Endabgabe_360_Defender.Gegnergeometrie("enemy", new ƒ.Vector3(3, 0, 1), new ƒ.Vector3(1, 1, 1), false, 2));
+                break;
+            case 3:
+                lanes[i].removeAllChildren();
+                lanes[i].addChild(new Endabgabe_360_Defender.Gegnergeometrie("enemy", new ƒ.Vector3(-3, 0, 1), new ƒ.Vector3(1, 1, 1), true, 2));
+                break;
         }
     }
     function hndMouse(_event) {

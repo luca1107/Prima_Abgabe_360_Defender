@@ -6,7 +6,7 @@ var Endabgabe_360_Defender;
         constructor(_name, _pos, _scale, _rot) {
             super(_name);
             this.rigidbody = new ƒ.ComponentRigidbody(2, ƒ.PHYSICS_TYPE.DYNAMIC, ƒ.COLLIDER_TYPE.SPHERE, ƒ.PHYSICS_GROUP.DEFAULT);
-            this.velocity = new ƒ.Vector3(_pos.x * 1.5, _pos.y * 1.5, .3);
+            this.velocity = new ƒ.Vector3(_pos.x * 2, _pos.y * 2, .3);
             this.addComponent(new ƒ.ComponentTransform());
             this.mtxLocal.translate(_pos);
             this.mtxLocal.scale(_scale);

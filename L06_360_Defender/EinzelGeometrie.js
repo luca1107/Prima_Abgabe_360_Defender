@@ -12,9 +12,10 @@ var Endabgabe_360_Defender;
         CUBE_TYPE["CYAN"] = "Cyan";
     })(CUBE_TYPE = Endabgabe_360_Defender.CUBE_TYPE || (Endabgabe_360_Defender.CUBE_TYPE = {}));
     class Einzelgeometrie extends ƒ.Node {
-        constructor(_name, _pos, _scale, _dir, _type) {
+        constructor(_name, _pos, _scale, _dir, _type, root) {
             super(_name);
             this.rigidbody = new ƒ.ComponentRigidbody(1, ƒ.PHYSICS_TYPE.KINEMATIC, ƒ.COLLIDER_TYPE.CUBE, ƒ.PHYSICS_GROUP.DEFAULT);
+            Einzelgeometrie._root = root;
             this.addComponent(new ƒ.ComponentTransform());
             this.mtxLocal.translateX(_pos.x);
             this.mtxLocal.translateY(_pos.y);
@@ -60,9 +61,8 @@ var Endabgabe_360_Defender;
                 root.removeChild(_event.cmpRigidbody.getContainer());*/
             }
             if (_event.cmpRigidbody.getContainer().name == "boden") {
-                /*this.removeComponent(new ƒ.ComponentMesh);
-                this.rigidbody.activate(false);
-                this.activate(false);*/
+                console.log("BodenKoll");
+                Einzelgeometrie._root.removeChild(this);
             }
         }
         activatePhysics() {

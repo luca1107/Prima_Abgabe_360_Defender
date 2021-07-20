@@ -13,7 +13,7 @@ namespace Endabgabe_360_Defender {
     constructor(_name: string, _pos: ƒ.Vector3, _scale: ƒ.Vector3, _rot: ƒ.Vector3) {
       super(_name);
 
-      this.velocity = new ƒ.Vector3(_pos.x * 1.5 , _pos.y * 1.5 , .3);
+      this.velocity = new ƒ.Vector3(_pos.x * 2 , _pos.y * 2 , .3);
 
       this.addComponent(new ƒ.ComponentTransform());
       this.mtxLocal.translate(_pos);

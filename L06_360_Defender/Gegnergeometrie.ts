@@ -10,23 +10,38 @@ namespace Endabgabe_360_Defender {
 
       this.direction = _dir;
 
+      let rand_1 : number;
+      let rand_2 : number;
+
       this.addComponent(new ƒ.ComponentTransform());
       this.mtxLocal.translateX(_pos.x);
       this.mtxLocal.translateY(_pos.y);
       this.mtxLocal.translateZ(_pos.z);
 
       //Setup der Gegnerstruktur
-      for ( let i: number = 1; i < _count+1; i++) {
+      for ( let i: number = 1; i < _count + 1; i++) {
 
-        for (let j: number = 1; j < _count+1; j++) {
+        // tslint:disable-next-line: typedef
+        let positions = new Map();
+          
+        for (let j: number = 1; j < _count + 1; j++) {
 
-          let rand_1 :number = Math.round(Math.random()*j);
-          let rand_2 :number = Math.round(Math.random()*i);
+          rand_1  = Gegnergeometrie.createRandomNumber(j);
+          rand_2  = Gegnergeometrie.createRandomNumber(j);
 
-          let pos: ƒ.Vector3 = new ƒ.Vector3(0, rand_1, rand_2);
-          let _type: CUBE_TYPE =  Gegnergeometrie.getRandomEnum(CUBE_TYPE);
 
-          this.appendChild(new Einzelgeometrie(_name, pos, _scale, _dir, _type));       
+          if (positions.get(rand_1 + "|" + rand_2) == true) {
+            console.log("gleich");
+            j--;
+          }
+
+          else {
+            positions.set(rand_1 + "|" + rand_2 , true);
+            let pos: ƒ.Vector3 = new ƒ.Vector3(0, rand_1, rand_2);
+            let _type: CUBE_TYPE =  Gegnergeometrie.getRandomEnum(CUBE_TYPE);
+            this.appendChild(new Einzelgeometrie(_name, pos, _scale, _dir, _type, this)); 
+
+          }      
         }
       }
       //this.direction = _dir;
@@ -37,6 +52,12 @@ namespace Endabgabe_360_Defender {
       console.log(randomKey);
       return _enum[randomKey];
   }
+
+    private static createRandomNumber(j: number): number
+    {
+      let rand: number = Math.round(Math.random() * j);
+      return rand;
+    }
 
     public move(): void {
       if (!this.direction)
