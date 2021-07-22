@@ -14,13 +14,14 @@ var Endabgabe_360_Defender;
             this.mtxLocal.translateZ(_pos.z);
             //Setup der Gegnerstruktur
             for (let i = 1; i < _count + 1; i++) {
+                if (_count == 3)
+                    i++;
                 // tslint:disable-next-line: typedef
                 let positions = new Map();
                 for (let j = 1; j < _count + 1; j++) {
                     rand_1 = Gegnergeometrie.createRandomNumber(j);
                     rand_2 = Gegnergeometrie.createRandomNumber(j);
-                    if (positions.get(rand_1 + "|" + rand_2) == true) {
-                        console.log("gleich");
+                    if (positions.has(rand_1 + "|" + rand_2)) {
                         j--;
                     }
                     else {
@@ -44,9 +45,22 @@ var Endabgabe_360_Defender;
         }
         move() {
             if (!this.direction)
-                this.mtxLocal.translateX(-1 / 4 * ƒ.Loop.timeFrameReal / 1000);
+                this.mtxLocal.translateX(-1 / 6 * ƒ.Loop.timeFrameReal / 1000);
             else
-                this.mtxLocal.translateX(1 / 4 * ƒ.Loop.timeFrameReal / 1000);
+                this.mtxLocal.translateX(1 / 6 * ƒ.Loop.timeFrameReal / 1000);
+        }
+        getPosX() {
+            let pos = 3;
+            if (!this.direction)
+                return pos + this.mtxLocal.translation.x;
+            else {
+                if (this.mtxLocal.translation.x > 0) {
+                    return pos - this.mtxLocal.translation.x;
+                }
+                else {
+                    return pos + Math.abs(this.mtxLocal.translation.x);
+                }
+            }
         }
     }
     Endabgabe_360_Defender.Gegnergeometrie = Gegnergeometrie;

@@ -17,9 +17,10 @@ namespace Endabgabe_360_Defender {
       this.mtxLocal.translateX(_pos.x);
       this.mtxLocal.translateY(_pos.y);
       this.mtxLocal.translateZ(_pos.z);
-
       //Setup der Gegnerstruktur
       for ( let i: number = 1; i < _count + 1; i++) {
+        if (_count == 3)
+        i++;
 
         // tslint:disable-next-line: typedef
         let positions = new Map();
@@ -30,8 +31,8 @@ namespace Endabgabe_360_Defender {
           rand_2  = Gegnergeometrie.createRandomNumber(j);
 
 
-          if (positions.get(rand_1 + "|" + rand_2) == true) {
-            console.log("gleich");
+          if (positions.has(rand_1 + "|" + rand_2)) {
+            
             j--;
           }
 
@@ -53,17 +54,32 @@ namespace Endabgabe_360_Defender {
       return _enum[randomKey];
   }
 
-    private static createRandomNumber(j: number): number
-    {
+    private static createRandomNumber(j: number): number {
       let rand: number = Math.round(Math.random() * j);
       return rand;
     }
 
     public move(): void {
       if (!this.direction)
-      this.mtxLocal.translateX( - 1 / 4 * ƒ.Loop.timeFrameReal / 1000);
+      this.mtxLocal.translateX( - 1 / 6 * ƒ.Loop.timeFrameReal / 1000);
       else
-      this.mtxLocal.translateX(  1 / 4 * ƒ.Loop.timeFrameReal / 1000);
+      this.mtxLocal.translateX(  1 / 6 * ƒ.Loop.timeFrameReal / 1000);
+    }
+
+
+    public getPosX(): number {
+      let pos: number = 3;
+
+      if (!this.direction)
+      return pos + this.mtxLocal.translation.x;
+      else {
+        if (this.mtxLocal.translation.x > 0) {
+        return pos - this.mtxLocal.translation.x;
+      }
+      else {
+        return pos + Math.abs(this.mtxLocal.translation.x);
+      }
+      }
     }
 
     

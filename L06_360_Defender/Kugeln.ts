@@ -13,7 +13,11 @@ namespace Endabgabe_360_Defender {
     constructor(_name: string, _pos: ƒ.Vector3, _scale: ƒ.Vector3, _rot: ƒ.Vector3) {
       super(_name);
 
-      this.velocity = new ƒ.Vector3(_pos.x * 2 , _pos.y * 2 , .3);
+      let forward : ƒ.Vector3 = new ƒ.Vector3();
+
+      console.log(_rot.x);
+
+      this.velocity = new ƒ.Vector3(_pos.x * 2.5 , _pos.y * 2.5 , .7);
 
       this.addComponent(new ƒ.ComponentTransform());
       this.mtxLocal.translate(_pos);
@@ -22,7 +26,6 @@ namespace Endabgabe_360_Defender {
 
       this.addComponent(this.rigidbody);
       this.rigidbody.restitution = 2;
-      //this.getComponent(ƒ.ComponentRigidbody).rotationInfluenceFactor = ƒ.Vector3.ZERO();
       this.rigidbody.addEventListener(ƒ.EVENT_PHYSICS.COLLISION_ENTER, this.handleCollision);
 
       let cmpMesh: ƒ.ComponentMesh = new ƒ.ComponentMesh(Kugeln.mesh);

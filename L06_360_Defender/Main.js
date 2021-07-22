@@ -14,7 +14,13 @@ var Endabgabe_360_Defender;
     let audioListener = new ƒ.ComponentAudioListener();
     let audioShoot = new ƒ.Audio("Audio/shoot.mp3");
     let audioComponentShoot = new ƒ.ComponentAudio(audioShoot, false, false, audioManager);
-    let vector_zero = new ƒ.Vector3(0, 1, 0);
+    let audioSchwer = new ƒ.Audio("Audio/hard.mp3");
+    let audioComponentSchwer = new ƒ.ComponentAudio(audioSchwer, false, false, audioManager);
+    let audioStart = new ƒ.Audio("Audio/start_game.mp3");
+    let audioComponentStart = new ƒ.ComponentAudio(audioStart, false, false, audioManager);
+    let audioNewEnemy = new ƒ.Audio("Audio/new_enemy.mp3");
+    let audioComponentNewEnemy = new ƒ.ComponentAudio(audioNewEnemy, false, false, audioManager);
+    let schwierigkeit_schwer = false;
     let score = 0;
     let ctrRotationY = new ƒ.Control("AvatarRotationY", -0.1, 0 /* PROPORTIONAL */);
     ctrRotationY.setDelay(100);
@@ -23,12 +29,15 @@ var Endabgabe_360_Defender;
     function init(_event) {
         const canvas = document.querySelector("canvas");
         document.getElementById("myScore").innerHTML = "Score" + score;
+        document.getElementById("btnNormal").addEventListener("click", handleButtonNormal);
+        document.getElementById("btnSchwer").addEventListener("click", handleButtonSchwer);
+        document.getElementById("btnStart").addEventListener("click", handleButtonStart);
         //Init Listener vor Keypress events
         document.addEventListener("keypress", handler_Key_Pressed);
         //Physic Settings
         ƒ.Physics.settings.defaultRestitution = 0.5;
         ƒ.Physics.settings.defaultFriction = 0.8;
-        ƒ.Physics.world.setGravity(new ƒ.Vector3(0, 0, -1));
+        ƒ.Physics.world.setGravity(new ƒ.Vector3(0, 0, -.55));
         //Boden Material
         let material_Boden = new ƒ.Material("Boden_Color", ƒ.ShaderUniColor, new ƒ.CoatColored(new ƒ.Color(1, 1, 1, 1)));
         let cmpMaterialBoden = new ƒ.ComponentMaterial(material_Boden);
@@ -119,7 +128,49 @@ var Endabgabe_360_Defender;
         //Audio
         gameRoot.addComponent(audioListener);
         gameRoot.addComponent(audioComponentShoot);
+        gameRoot.addComponent(audioComponentSchwer);
+        gameRoot.addComponent(audioComponentStart);
+        gameRoot.addComponent(audioComponentNewEnemy);
         audioManager.listenTo(gameRoot);
+        //Init first Camera Setup
+        let cmpCamera = new ƒ.ComponentCamera();
+        //cmpCamera.mtxPivot.translateZ(20.5);
+        //cmpCamera.mtxPivot.rotateX(0);
+        cmpCamera.mtxPivot.translateZ(4.5);
+        cmpCamera.mtxPivot.rotateX(75);
+        cmpCamera.mtxPivot.rotateY(180);
+        console.log(cmpCamera);
+        //Init Canon / Player
+        let meshCanon = new ƒ.MeshCube("Cube_Player");
+        let transformCanon = new ƒ.ComponentTransform(new ƒ.Matrix4x4());
+        transformCanon.mtxLocal.translateZ(0);
+        let cmpMeshCanon = (new ƒ.ComponentMesh(meshCanon));
+        //cmpMeshGameRoot.mtxPivot.scale(new ƒ.Vector3(1, 1, 1));
+        let canon_material = new ƒ.Material("Canon_Color", ƒ.ShaderUniColor, new ƒ.CoatColored(new ƒ.Color(0, 1, 0, 1)));
+        let canon_cmpMaterial = new ƒ.ComponentMaterial(canon_material);
+        canon.addComponent(canon_cmpMaterial);
+        canon.addComponent(cmpMeshCanon);
+        canon.addComponent(transformCanon);
+        canon.addComponent(cmpCamera);
+        canon.appendChild(kugel_spawner);
+        //Appending Children to GameRoot
+        gameRoot.appendChild(boden);
+        gameRoot.appendChild(canon);
+        gameRoot.appendChild(waende);
+        console.log(gameRoot);
+        //Init Update Method
+        ƒ.Physics.settings.debugDraw = true;
+        ƒ.Physics.adjustTransforms(gameRoot);
+        //Init Viewport
+        viewport.initialize("Viewport", gameRoot, cmpCamera, canvas);
+        viewport.draw();
+    }
+    function handleButtonNormal() {
+        schwierigkeit_schwer = false;
+        document.getElementById("schwierigkeitsgrad").innerHTML = "Schwierigkeitsgrad : " + "NORMAL";
+        console.log("normalPressed");
+        lanesRoot.removeAllChildren();
+        gameRoot.removeChild(lanesRoot);
         //Init Lanes
         for (let i = 0; i < 4; i++) {
             let lane = new Endabgabe_360_Defender.QuadLane("Lane" + i, new ƒ.Vector3(0, 0, 1), new ƒ.Vector3(6, 1, 1));
@@ -149,73 +200,163 @@ var Endabgabe_360_Defender;
             lanesRoot.appendChild(lane);
         }
         lanesRoot.addComponent(new ƒ.ComponentTransform());
-        //Init first Camera Setup
-        let cmpCamera = new ƒ.ComponentCamera();
-        //cmpCamera.mtxPivot.translateZ(20.5);
-        //cmpCamera.mtxPivot.rotateX(0);
-        cmpCamera.mtxPivot.translateZ(4.5);
-        cmpCamera.mtxPivot.rotateX(75);
-        cmpCamera.mtxPivot.rotateY(180);
-        console.log(cmpCamera);
-        //Init Canon / Player
-        let meshCanon = new ƒ.MeshCube("Cube_Player");
-        let transformCanon = new ƒ.ComponentTransform(new ƒ.Matrix4x4());
-        transformCanon.mtxLocal.translateZ(0);
-        let cmpMeshCanon = (new ƒ.ComponentMesh(meshCanon));
-        //cmpMeshGameRoot.mtxPivot.scale(new ƒ.Vector3(1, 1, 1));
-        let canon_material = new ƒ.Material("Canon_Color", ƒ.ShaderUniColor, new ƒ.CoatColored(new ƒ.Color(0, 1, 0, 1)));
-        let canon_cmpMaterial = new ƒ.ComponentMaterial(canon_material);
-        canon.addComponent(canon_cmpMaterial);
-        canon.addComponent(cmpMeshCanon);
-        canon.addComponent(transformCanon);
-        canon.addComponent(cmpCamera);
-        canon.appendChild(kugel_spawner);
-        //Appending Children to GameRoot
-        gameRoot.appendChild(boden);
         gameRoot.appendChild(lanesRoot);
-        gameRoot.appendChild(canon);
-        gameRoot.appendChild(waende);
-        console.log(gameRoot);
-        //Init Update Method
-        ƒ.Physics.settings.debugDraw = true;
-        ƒ.Physics.adjustTransforms(gameRoot);
+        viewport.draw();
+    }
+    function handleButtonSchwer() {
+        audioComponentSchwer.play(true);
+        schwierigkeit_schwer = true;
+        document.getElementById("schwierigkeitsgrad").innerHTML = "Schwierigkeitsgrad : " + "SCHWER";
+        console.log("normalPressed");
+        lanesRoot.removeAllChildren();
+        gameRoot.removeChild(lanesRoot);
+        //Init Lanes
+        for (let i = 0; i < 4; i++) {
+            let lane = new Endabgabe_360_Defender.QuadLane("Lane" + i, new ƒ.Vector3(0, 0, 1), new ƒ.Vector3(6, 1, 1));
+            switch (i) {
+                //Setup LanePositions
+                case 0:
+                    lane.setTransform(new ƒ.Vector3(-5, 0, 1), new ƒ.Vector3(0, 0, 0));
+                    lane.addChild(new Endabgabe_360_Defender.Gegnergeometrie("enemy", new ƒ.Vector3(-3, 0, 1), new ƒ.Vector3(1, 1, 1), true, 3));
+                    break;
+                case 1:
+                    lane.setTransform(new ƒ.Vector3(0, 5, 1), new ƒ.Vector3(0, 0, 90));
+                    lane.addChild(new Endabgabe_360_Defender.Gegnergeometrie("enemy", new ƒ.Vector3(3, 0, 1), new ƒ.Vector3(1, 1, 1), false, 3));
+                    break;
+                case 2:
+                    lane.setTransform(new ƒ.Vector3(5, 0, 1), new ƒ.Vector3(0, 0, 0));
+                    lane.addChild(new Endabgabe_360_Defender.Gegnergeometrie("enemy", new ƒ.Vector3(3, 0, 1), new ƒ.Vector3(1, 1, 1), false, 3));
+                    break;
+                case 3:
+                    lane.setTransform(new ƒ.Vector3(0, -5, 1), new ƒ.Vector3(0, 0, 90));
+                    lane.addChild(new Endabgabe_360_Defender.Gegnergeometrie("enemy", new ƒ.Vector3(-3, 0, 1), new ƒ.Vector3(1, 1, 1), true, 3));
+                    break;
+            }
+            lanesRoot.appendChild(lane);
+        }
+        lanesRoot.addComponent(new ƒ.ComponentTransform());
+        gameRoot.appendChild(lanesRoot);
+        viewport.draw();
+    }
+    function handleButtonStart() {
+        audioComponentStart.play(true);
         ƒ.Loop.start(ƒ.LOOP_MODE.TIME_REAL, 60);
         ƒ.Loop.addEventListener("loopFrame" /* LOOP_FRAME */, update);
-        //Init Viewport
-        viewport.initialize("Viewport", gameRoot, cmpCamera, canvas);
-        viewport.draw();
     }
     function handleCollision(_event) {
         if (_event.cmpRigidbody.getContainer().name == "enemy")
             score++;
+        /*if(score==20)
+        lanesRoot.getChildren().forEach(element => {
+          element.getChildren().forEach(element => {
+            element.removeComponent(element.getComponent(ƒ.ComponentRigidbody));
+          });
+          element.removeAllChildren();
+        });*/
         console.log("Kol mit Boden");
         _event.cmpRigidbody.activate(false);
         _event.cmpRigidbody.setScaling(ƒ.Vector3.ZERO());
+        _event.cmpRigidbody.getContainer().removeComponent(_event.cmpRigidbody.getContainer().getComponent(ƒ.ComponentRigidbody));
+        /*
+        _event.cmpRigidbody.getContainer().removeComponent(_event.cmpRigidbody.getContainer().getComponent(ƒ.ComponentMesh));
+        _event.cmpRigidbody.getContainer().removeComponent(_event.cmpRigidbody.getContainer().getComponent(ƒ.ComponentMaterial));
+        _event.cmpRigidbody.getContainer().removeComponent(_event.cmpRigidbody.getContainer().getComponent(ƒ.ComponentTransform));*/
         gameRoot.removeChild(_event.cmpRigidbody.getContainer());
-        if (score % 15 == 0 && score > 0)
-            createNewEnemys();
+        if (schwierigkeit_schwer) {
+            if (score % 10 == 0 && score > 0)
+                createNewEnemys();
+        }
+        else {
+            if (score % 6 == 0 && score > 0)
+                createNewEnemys();
+        }
         document.getElementById("myScore").innerHTML = "Score : " + score;
     }
     function createNewEnemys() {
+        audioComponentNewEnemy.play(true);
         let lanes = lanesRoot.getChildren();
-        let i = Math.round(Math.random() * 3);
-        switch (i) {
-            case 0:
-                lanes[i].removeAllChildren();
-                lanes[i].addChild(new Endabgabe_360_Defender.Gegnergeometrie("enemy", new ƒ.Vector3(-3, 0, 1), new ƒ.Vector3(1, 1, 1), true, 2));
-                break;
-            case 1:
-                lanes[i].removeAllChildren();
-                lanes[i].addChild(new Endabgabe_360_Defender.Gegnergeometrie("enemy", new ƒ.Vector3(3, 0, 1), new ƒ.Vector3(1, 1, 1), false, 2));
-                break;
-            case 2:
-                lanes[i].removeAllChildren();
-                lanes[i].addChild(new Endabgabe_360_Defender.Gegnergeometrie("enemy", new ƒ.Vector3(3, 0, 1), new ƒ.Vector3(1, 1, 1), false, 2));
-                break;
-            case 3:
-                lanes[i].removeAllChildren();
-                lanes[i].addChild(new Endabgabe_360_Defender.Gegnergeometrie("enemy", new ƒ.Vector3(-3, 0, 1), new ƒ.Vector3(1, 1, 1), true, 2));
-                break;
+        let i = Math.round(Math.random() * 4);
+        if (schwierigkeit_schwer) {
+            switch (i) {
+                //Setup LanePositions
+                case 0:
+                    lanes[i].getChildren().forEach(element => {
+                        element.getComponent(ƒ.ComponentRigidbody).activate(false);
+                        element.getComponent(ƒ.ComponentRigidbody).setScaling(ƒ.Vector3.ZERO());
+                        element.removeComponent(element.getComponent(ƒ.ComponentRigidbody));
+                    });
+                    lanes[i].removeAllChildren();
+                    lanes[i].addChild(new Endabgabe_360_Defender.Gegnergeometrie("enemy", new ƒ.Vector3(-3, 0, 1), new ƒ.Vector3(1, 1, 1), true, 3));
+                    break;
+                case 1:
+                    lanes[i].getChildren().forEach(element => {
+                        element.getComponent(ƒ.ComponentRigidbody).activate(false);
+                        element.getComponent(ƒ.ComponentRigidbody).setScaling(ƒ.Vector3.ZERO());
+                        element.removeComponent(element.getComponent(ƒ.ComponentRigidbody));
+                    });
+                    lanes[i].removeAllChildren();
+                    lanes[i].addChild(new Endabgabe_360_Defender.Gegnergeometrie("enemy", new ƒ.Vector3(3, 0, 1), new ƒ.Vector3(1, 1, 1), false, 3));
+                    break;
+                case 2:
+                    lanes[i].getChildren().forEach(element => {
+                        element.getComponent(ƒ.ComponentRigidbody).activate(false);
+                        element.getComponent(ƒ.ComponentRigidbody).setScaling(ƒ.Vector3.ZERO());
+                        element.removeComponent(element.getComponent(ƒ.ComponentRigidbody));
+                    });
+                    lanes[i].removeAllChildren();
+                    lanes[i].addChild(new Endabgabe_360_Defender.Gegnergeometrie("enemy", new ƒ.Vector3(3, 0, 1), new ƒ.Vector3(1, 1, 1), false, 3));
+                    break;
+                case 3:
+                    lanes[i].getChildren().forEach(element => {
+                        element.getComponent(ƒ.ComponentRigidbody).activate(false);
+                        element.getComponent(ƒ.ComponentRigidbody).setScaling(ƒ.Vector3.ZERO());
+                        element.removeComponent(element.getComponent(ƒ.ComponentRigidbody));
+                    });
+                    lanes[i].removeAllChildren();
+                    lanes[i].addChild(new Endabgabe_360_Defender.Gegnergeometrie("enemy", new ƒ.Vector3(-3, 0, 1), new ƒ.Vector3(1, 1, 1), true, 3));
+                    break;
+            }
+        }
+        else {
+            switch (i) {
+                //Setup LanePositions
+                case 0:
+                    lanes[i].getChildren().forEach(element => {
+                        element.getComponent(ƒ.ComponentRigidbody).activate(false);
+                        element.getComponent(ƒ.ComponentRigidbody).setScaling(ƒ.Vector3.ZERO());
+                        element.removeComponent(element.getComponent(ƒ.ComponentRigidbody));
+                    });
+                    lanes[i].removeAllChildren();
+                    lanes[i].addChild(new Endabgabe_360_Defender.Gegnergeometrie("enemy", new ƒ.Vector3(-3, 0, 1), new ƒ.Vector3(1, 1, 1), true, 2));
+                    break;
+                case 1:
+                    lanes[i].getChildren().forEach(element => {
+                        element.getComponent(ƒ.ComponentRigidbody).activate(false);
+                        element.getComponent(ƒ.ComponentRigidbody).setScaling(ƒ.Vector3.ZERO());
+                        element.removeComponent(element.getComponent(ƒ.ComponentRigidbody));
+                    });
+                    lanes[i].removeAllChildren();
+                    lanes[i].addChild(new Endabgabe_360_Defender.Gegnergeometrie("enemy", new ƒ.Vector3(3, 0, 1), new ƒ.Vector3(1, 1, 1), false, 2));
+                    break;
+                case 2:
+                    lanes[i].getChildren().forEach(element => {
+                        element.getComponent(ƒ.ComponentRigidbody).activate(false);
+                        element.getComponent(ƒ.ComponentRigidbody).setScaling(ƒ.Vector3.ZERO());
+                        element.removeComponent(element.getComponent(ƒ.ComponentRigidbody));
+                    });
+                    lanes[i].removeAllChildren();
+                    lanes[i].addChild(new Endabgabe_360_Defender.Gegnergeometrie("enemy", new ƒ.Vector3(3, 0, 1), new ƒ.Vector3(1, 1, 1), false, 2));
+                    break;
+                case 3:
+                    lanes[i].getChildren().forEach(element => {
+                        element.getComponent(ƒ.ComponentRigidbody).activate(false);
+                        element.getComponent(ƒ.ComponentRigidbody).setScaling(ƒ.Vector3.ZERO());
+                        element.removeComponent(element.getComponent(ƒ.ComponentRigidbody));
+                    });
+                    lanes[i].removeAllChildren();
+                    lanes[i].addChild(new Endabgabe_360_Defender.Gegnergeometrie("enemy", new ƒ.Vector3(-3, 0, 1), new ƒ.Vector3(1, 1, 1), true, 2));
+                    break;
+            }
         }
     }
     function hndMouse(_event) {
@@ -226,14 +367,9 @@ var Endabgabe_360_Defender;
     function handler_Key_Pressed(_event) {
         if (_event.code == ƒ.KEYBOARD_CODE.SPACE) {
             let kugel = new Endabgabe_360_Defender.Kugeln("Kugel", kugel_spawner.mtxWorld.translation, ƒ.Vector3.ONE(.1), kugel_spawner.mtxWorld.rotation);
-            /*for (let lanes of lanesRoot.getChildren() as QuadLane[]) {
-              for (let einzelGeo of lanes.getChildren() as Einzelgeometrie[]) {
-                einzelGeo.triggerPhysic();  // Hier der Versuch über Tasteneingabe die Physik zu triggern
-                //console.log(einzelGeo.name);
-              }
-            }*/
             gameRoot.addChild(kugel);
-            gameRoot.getComponent(ƒ.ComponentAudio).play(true);
+            //gameRoot.getComponent(ƒ.ComponentAudio).play(true);
+            audioComponentShoot.play(true);
             ƒ.Physics.adjustTransforms(gameRoot);
         }
         if (_event.code == ƒ.KEYBOARD_CODE.T) {
@@ -245,14 +381,25 @@ var Endabgabe_360_Defender;
     }
     function update(_event) {
         for (let lanes of lanesRoot.getChildren()) {
+            let counter = 0;
             for (let gegnerGeo of lanes.getChildren()) {
+                if (gegnerGeo.getPosX() < 1) {
+                    let einzelgeo = gegnerGeo.getChildren();
+                    einzelgeo.forEach(element => {
+                        if (element.getComponent(ƒ.ComponentRigidbody) != null)
+                            element.getComponent(ƒ.ComponentRigidbody).setScaling(ƒ.Vector3.ZERO());
+                    });
+                    lanes.removeChild(gegnerGeo);
+                    score -= 5;
+                    createNewEnemys();
+                    document.getElementById("myScore").innerHTML = "Score : " + score;
+                }
                 gegnerGeo.move();
-                //console.log(einzelGeo.name);
             }
             //Bewegung der Geometrie etc.
             canon.mtxLocal.rotateZ(ctrRotationX.getOutput()); //Z Achse weil Objekt gedreht wurde --> X Achse ist jetzt die Z Achse
             canon.mtxLocal.rotateX(ctrRotationY.getOutput());
-            canon.mtxLocal.rotation.y = 0;
+            canon.mtxLocal.rotation = new ƒ.Vector3(canon.mtxLocal.rotation.x, 0, canon.mtxLocal.rotation.z);
             ctrRotationX.setInput(0);
             ctrRotationY.setInput(0);
             //Refresh Viewport

@@ -12,10 +12,15 @@ namespace Endabgabe_360_Defender {
   let audioManager: ƒ.AudioManager = new ƒ.AudioManager();
   let audioListener: ƒ.ComponentAudioListener = new  ƒ.ComponentAudioListener();
   let audioShoot: ƒ.Audio = new  ƒ.Audio("Audio/shoot.mp3");
-  let audioComponentShoot : ƒ.ComponentAudio = new ƒ.ComponentAudio(audioShoot, false, false, audioManager);
-  
+  let audioComponentShoot: ƒ.ComponentAudio = new ƒ.ComponentAudio(audioShoot, false, false, audioManager);
+  let audioSchwer: ƒ.Audio = new  ƒ.Audio("Audio/hard.mp3");
+  let audioComponentSchwer : ƒ.ComponentAudio = new ƒ.ComponentAudio(audioSchwer, false, false, audioManager);
+  let audioStart: ƒ.Audio = new  ƒ.Audio("Audio/start_game.mp3");
+  let audioComponentStart : ƒ.ComponentAudio = new ƒ.ComponentAudio(audioStart, false, false, audioManager);
+  let audioNewEnemy: ƒ.Audio = new  ƒ.Audio("Audio/new_enemy.mp3");
+  let audioComponentNewEnemy : ƒ.ComponentAudio = new ƒ.ComponentAudio(audioNewEnemy, false, false, audioManager);
 
-  let vector_zero: ƒ.Vector3 =  new ƒ.Vector3(0, 1, 0);
+  let schwierigkeit_schwer = false;
 
   let score: number = 0;
 
@@ -23,10 +28,16 @@ namespace Endabgabe_360_Defender {
   ctrRotationY.setDelay(100);
   let ctrRotationX: ƒ.Control = new ƒ.Control("AvatarRotationX", -0.1, ƒ.CONTROL_TYPE.PROPORTIONAL);
   ctrRotationX.setDelay(100);
+  
+
+  
 
   function init(_event: Event): void {
     const canvas: HTMLCanvasElement = document.querySelector("canvas");
     document.getElementById("myScore").innerHTML = "Score" + score;
+    document.getElementById("btnNormal").addEventListener("click", handleButtonNormal);
+    document.getElementById("btnSchwer").addEventListener("click", handleButtonSchwer);
+    document.getElementById("btnStart").addEventListener("click", handleButtonStart);
 
 
     //Init Listener vor Keypress events
@@ -36,7 +47,7 @@ namespace Endabgabe_360_Defender {
     //Physic Settings
     ƒ.Physics.settings.defaultRestitution = 0.5;
     ƒ.Physics.settings.defaultFriction = 0.8;
-    ƒ.Physics.world.setGravity(new ƒ.Vector3(0, 0, -1) );
+    ƒ.Physics.world.setGravity(new ƒ.Vector3(0, 0, -.55) );
 
 
 
@@ -161,11 +172,68 @@ namespace Endabgabe_360_Defender {
     //Audio
     gameRoot.addComponent(audioListener);
     gameRoot.addComponent(audioComponentShoot);
+    gameRoot.addComponent(audioComponentSchwer);
+    gameRoot.addComponent(audioComponentStart);
+    gameRoot.addComponent(audioComponentNewEnemy);
     audioManager.listenTo(gameRoot);
 
-      
-  
+   
+    //Init first Camera Setup
+    let cmpCamera: ƒ.ComponentCamera = new ƒ.ComponentCamera();
+    //cmpCamera.mtxPivot.translateZ(20.5);
+    //cmpCamera.mtxPivot.rotateX(0);
+    cmpCamera.mtxPivot.translateZ(4.5);
+    cmpCamera.mtxPivot.rotateX(75);
+    cmpCamera.mtxPivot.rotateY(180);
+   
+    console.log(cmpCamera);
+
+
+    //Init Canon / Player
+    let meshCanon: ƒ.MeshCube = new ƒ.MeshCube("Cube_Player");
+    let transformCanon: ƒ.ComponentTransform = new ƒ.ComponentTransform(new ƒ.Matrix4x4());
+    transformCanon.mtxLocal.translateZ(0);
+    let cmpMeshCanon = (new ƒ.ComponentMesh(meshCanon));
+    //cmpMeshGameRoot.mtxPivot.scale(new ƒ.Vector3(1, 1, 1));
+
+
+    let canon_material: ƒ.Material = new ƒ.Material("Canon_Color", ƒ.ShaderUniColor, new ƒ.CoatColored(new ƒ.Color(0, 1, 0, 1)));
+    let canon_cmpMaterial: ƒ.ComponentMaterial = new ƒ.ComponentMaterial(canon_material);
+    canon.addComponent(canon_cmpMaterial);
+    canon.addComponent(cmpMeshCanon);
+    canon.addComponent(transformCanon);
+    canon.addComponent(cmpCamera);
+    canon.appendChild(kugel_spawner);
+
     
+
+    
+    //Appending Children to GameRoot
+    
+    gameRoot.appendChild(boden);
+    gameRoot.appendChild(canon);
+    gameRoot.appendChild(waende);
+
+    console.log(gameRoot);
+
+    //Init Update Method
+    ƒ.Physics.settings.debugDraw = true;
+    ƒ.Physics.adjustTransforms(gameRoot);
+
+  
+    //Init Viewport
+    viewport.initialize("Viewport", gameRoot, cmpCamera, canvas);
+    viewport.draw();
+  }
+
+
+  function handleButtonNormal(): void
+  {
+    schwierigkeit_schwer = false;
+    document.getElementById("schwierigkeitsgrad").innerHTML = "Schwierigkeitsgrad : " + "NORMAL";
+    console.log("normalPressed");
+    lanesRoot.removeAllChildren();
+    gameRoot.removeChild(lanesRoot);
 
     //Init Lanes
     for (let i: number = 0; i < 4; i++) {
@@ -200,58 +268,56 @@ namespace Endabgabe_360_Defender {
 
     }
     lanesRoot.addComponent(new ƒ.ComponentTransform());
-
-    //Init first Camera Setup
-    let cmpCamera: ƒ.ComponentCamera = new ƒ.ComponentCamera();
-    //cmpCamera.mtxPivot.translateZ(20.5);
-    //cmpCamera.mtxPivot.rotateX(0);
-    cmpCamera.mtxPivot.translateZ(4.5);
-    cmpCamera.mtxPivot.rotateX(75);
-    cmpCamera.mtxPivot.rotateY(180);
-   
-    console.log(cmpCamera);
-
-
-    //Init Canon / Player
-    let meshCanon: ƒ.MeshCube = new ƒ.MeshCube("Cube_Player");
-    let transformCanon: ƒ.ComponentTransform = new ƒ.ComponentTransform(new ƒ.Matrix4x4());
-    transformCanon.mtxLocal.translateZ(0);
-    let cmpMeshCanon = (new ƒ.ComponentMesh(meshCanon));
-    //cmpMeshGameRoot.mtxPivot.scale(new ƒ.Vector3(1, 1, 1));
-
-
-    let canon_material: ƒ.Material = new ƒ.Material("Canon_Color", ƒ.ShaderUniColor, new ƒ.CoatColored(new ƒ.Color(0, 1, 0, 1)));
-    let canon_cmpMaterial: ƒ.ComponentMaterial = new ƒ.ComponentMaterial(canon_material);
-    canon.addComponent(canon_cmpMaterial);
-    canon.addComponent(cmpMeshCanon);
-    canon.addComponent(transformCanon);
-    canon.addComponent(cmpCamera);
-    canon.appendChild(kugel_spawner);
-
-    
-
-
-    
-    //Appending Children to GameRoot
-    
-    gameRoot.appendChild(boden);
     gameRoot.appendChild(lanesRoot);
-    gameRoot.appendChild(canon);
-    gameRoot.appendChild(waende);
+    viewport.draw();
+  }
+  
+  function handleButtonSchwer(): void
+  {
+    audioComponentSchwer.play(true);
+    schwierigkeit_schwer = true;
+    document.getElementById("schwierigkeitsgrad").innerHTML = "Schwierigkeitsgrad : " + "SCHWER";
+    console.log("normalPressed");
+    lanesRoot.removeAllChildren();
+    gameRoot.removeChild(lanesRoot);
 
-    console.log(gameRoot);
+    //Init Lanes
+    for (let i: number = 0; i < 4; i++) {
+      let lane: QuadLane = new QuadLane("Lane" + i, new ƒ.Vector3(0, 0, 1), new ƒ.Vector3(6, 1, 1 ));
+      switch (i) {
+        //Setup LanePositions
 
-    //Init Update Method
-    ƒ.Physics.settings.debugDraw = true;
+        case 0:
+          lane.setTransform(new ƒ.Vector3(-5, 0, 1), new ƒ.Vector3(0, 0, 0));
+          lane.addChild(new Gegnergeometrie("enemy", new ƒ.Vector3(-3, 0, 1), new ƒ.Vector3(1, 1, 1), true, 3));
+          break;
+        case 1:
+          lane.setTransform(new ƒ.Vector3(0, 5, 1), new ƒ.Vector3(0, 0, 90));
+          lane.addChild(new Gegnergeometrie("enemy", new ƒ.Vector3(3, 0, 1), new ƒ.Vector3(1, 1, 1), false, 3));
+          break;
+          case 2:
+          lane.setTransform(new ƒ.Vector3(5, 0, 1), new ƒ.Vector3(0, 0, 0));
+          lane.addChild(new Gegnergeometrie("enemy", new ƒ.Vector3(3, 0, 1), new ƒ.Vector3(1, 1, 1), false, 3));
+          break;
+          case 3:
+          lane.setTransform(new ƒ.Vector3(0, -5, 1), new ƒ.Vector3(0, 0, 90));
+          lane.addChild(new Gegnergeometrie("enemy", new ƒ.Vector3(-3, 0, 1), new ƒ.Vector3(1, 1, 1), true, 3));
+          break;
 
-    ƒ.Physics.adjustTransforms(gameRoot);
+      }
+      lanesRoot.appendChild(lane);
+
+    }
+    lanesRoot.addComponent(new ƒ.ComponentTransform());
+    gameRoot.appendChild(lanesRoot);
+    viewport.draw();
+  }
+
+  function handleButtonStart(): void
+  {
+    audioComponentStart.play(true);
     ƒ.Loop.start(ƒ.LOOP_MODE.TIME_REAL, 60);
     ƒ.Loop.addEventListener(ƒ.EVENT.LOOP_FRAME, update);
-
-
-    //Init Viewport
-    viewport.initialize("Viewport", gameRoot, cmpCamera, canvas);
-    viewport.draw();
   }
 
 
@@ -261,14 +327,37 @@ namespace Endabgabe_360_Defender {
     if (_event.cmpRigidbody.getContainer().name == "enemy")
     score++;
 
+    /*if(score==20)
+    lanesRoot.getChildren().forEach(element => {
+      element.getChildren().forEach(element => {
+        element.removeComponent(element.getComponent(ƒ.ComponentRigidbody));
+      });
+      element.removeAllChildren();
+    });*/
+    
+
     console.log("Kol mit Boden");
+    
+    
     _event.cmpRigidbody.activate(false);
     _event.cmpRigidbody.setScaling(ƒ.Vector3.ZERO());
+    _event.cmpRigidbody.getContainer().removeComponent(_event.cmpRigidbody.getContainer().getComponent(ƒ.ComponentRigidbody));
+    /*
+    _event.cmpRigidbody.getContainer().removeComponent(_event.cmpRigidbody.getContainer().getComponent(ƒ.ComponentMesh));
+    _event.cmpRigidbody.getContainer().removeComponent(_event.cmpRigidbody.getContainer().getComponent(ƒ.ComponentMaterial));
+    _event.cmpRigidbody.getContainer().removeComponent(_event.cmpRigidbody.getContainer().getComponent(ƒ.ComponentTransform));*/
     gameRoot.removeChild(_event.cmpRigidbody.getContainer());
 
-    if (score % 15 == 0 && score > 0)
-    createNewEnemys();
-
+    if (schwierigkeit_schwer)
+    {
+      if (score % 10 == 0 && score > 0)
+      createNewEnemys();
+    }
+    else
+    {
+      if (score % 6 == 0 && score > 0)
+      createNewEnemys();
+    }
 
     document.getElementById("myScore").innerHTML = "Score : " + score;
 
@@ -276,30 +365,100 @@ namespace Endabgabe_360_Defender {
   }
 
   function createNewEnemys(): void {
+    audioComponentNewEnemy.play(true);
     let lanes: ƒ.Node[] = lanesRoot.getChildren();
    
     
-    let i: number = Math.round(Math.random() * 3);
-    switch (i) {
+    let i: number = Math.round(Math.random() * 4);
+    if (schwierigkeit_schwer)
+    {
+      switch (i) {
+        //Setup LanePositions
+
         case 0:
+          lanes[i].getChildren().forEach(element => {
+            element.getComponent(ƒ.ComponentRigidbody).activate(false);
+            element.getComponent(ƒ.ComponentRigidbody).setScaling(ƒ.Vector3.ZERO());
+            element.removeComponent(element.getComponent(ƒ.ComponentRigidbody));
+          });
+          lanes[i].removeAllChildren();
+          lanes[i].addChild(new Gegnergeometrie("enemy", new ƒ.Vector3(-3, 0, 1), new ƒ.Vector3(1, 1, 1), true, 3));
+          break;
+        case 1:
+          lanes[i].getChildren().forEach(element => {
+            element.getComponent(ƒ.ComponentRigidbody).activate(false);
+            element.getComponent(ƒ.ComponentRigidbody).setScaling(ƒ.Vector3.ZERO());
+            element.removeComponent(element.getComponent(ƒ.ComponentRigidbody));
+          });
+          lanes[i].removeAllChildren();
+          lanes[i].addChild(new Gegnergeometrie("enemy", new ƒ.Vector3(3, 0, 1), new ƒ.Vector3(1, 1, 1), false, 3));
+          break;
+          case 2:
+            lanes[i].getChildren().forEach(element => {
+              element.getComponent(ƒ.ComponentRigidbody).activate(false);
+              element.getComponent(ƒ.ComponentRigidbody).setScaling(ƒ.Vector3.ZERO());
+              element.removeComponent(element.getComponent(ƒ.ComponentRigidbody));
+            });
+            lanes[i].removeAllChildren();
+            lanes[i].addChild(new Gegnergeometrie("enemy", new ƒ.Vector3(3, 0, 1), new ƒ.Vector3(1, 1, 1), false, 3));
+            break;
+          case 3:
+            lanes[i].getChildren().forEach(element => {
+              element.getComponent(ƒ.ComponentRigidbody).activate(false);
+              element.getComponent(ƒ.ComponentRigidbody).setScaling(ƒ.Vector3.ZERO());
+              element.removeComponent(element.getComponent(ƒ.ComponentRigidbody));
+            });
+            lanes[i].removeAllChildren(); 
+            lanes[i].addChild(new Gegnergeometrie("enemy", new ƒ.Vector3(-3, 0, 1), new ƒ.Vector3(1, 1, 1), true, 3));
+            break;
+
+      }
+    }
+    else
+    {
+      switch (i) {
+        //Setup LanePositions
+
+        case 0:
+          lanes[i].getChildren().forEach(element => {
+            element.getComponent(ƒ.ComponentRigidbody).activate(false);
+            element.getComponent(ƒ.ComponentRigidbody).setScaling(ƒ.Vector3.ZERO());
+            element.removeComponent(element.getComponent(ƒ.ComponentRigidbody));
+          });
           lanes[i].removeAllChildren();
           lanes[i].addChild(new Gegnergeometrie("enemy", new ƒ.Vector3(-3, 0, 1), new ƒ.Vector3(1, 1, 1), true, 2));
           break;
         case 1:
+          lanes[i].getChildren().forEach(element => {
+            element.getComponent(ƒ.ComponentRigidbody).activate(false);
+            element.getComponent(ƒ.ComponentRigidbody).setScaling(ƒ.Vector3.ZERO());
+            element.removeComponent(element.getComponent(ƒ.ComponentRigidbody));
+          });
           lanes[i].removeAllChildren();
           lanes[i].addChild(new Gegnergeometrie("enemy", new ƒ.Vector3(3, 0, 1), new ƒ.Vector3(1, 1, 1), false, 2));
           break;
-        case 2:
-          lanes[i].removeAllChildren();
-          lanes[i].addChild(new Gegnergeometrie("enemy", new ƒ.Vector3(3, 0, 1), new ƒ.Vector3(1, 1, 1), false, 2));
-          break;
-        case 3:
-          lanes[i].removeAllChildren();
-          lanes[i].addChild(new Gegnergeometrie("enemy", new ƒ.Vector3(-3, 0, 1), new ƒ.Vector3(1, 1, 1), true, 2));
-          break;
+          case 2:
+            lanes[i].getChildren().forEach(element => {
+              element.getComponent(ƒ.ComponentRigidbody).activate(false);
+              element.getComponent(ƒ.ComponentRigidbody).setScaling(ƒ.Vector3.ZERO());
+              element.removeComponent(element.getComponent(ƒ.ComponentRigidbody));
+            });
+            lanes[i].removeAllChildren();
+            lanes[i].addChild(new Gegnergeometrie("enemy", new ƒ.Vector3(3, 0, 1), new ƒ.Vector3(1, 1, 1), false, 2));
+            break;
+          case 3:
+            lanes[i].getChildren().forEach(element => {
+              element.getComponent(ƒ.ComponentRigidbody).activate(false);
+              element.getComponent(ƒ.ComponentRigidbody).setScaling(ƒ.Vector3.ZERO());
+              element.removeComponent(element.getComponent(ƒ.ComponentRigidbody));
+            });
+            lanes[i].removeAllChildren();  
+            lanes[i].addChild(new Gegnergeometrie("enemy", new ƒ.Vector3(-3, 0, 1), new ƒ.Vector3(1, 1, 1), true, 2));
+            break;
+
       }
-      
-    
+    }
+        
     
   }
 
@@ -314,16 +473,9 @@ namespace Endabgabe_360_Defender {
 
     if (_event.code ==  ƒ.KEYBOARD_CODE.SPACE ) {
       let kugel: Kugeln = new Kugeln("Kugel", kugel_spawner.mtxWorld.translation, ƒ.Vector3.ONE(.1), kugel_spawner.mtxWorld.rotation);
-
-      /*for (let lanes of lanesRoot.getChildren() as QuadLane[]) {
-        for (let einzelGeo of lanes.getChildren() as Einzelgeometrie[]) {
-          einzelGeo.triggerPhysic();  // Hier der Versuch über Tasteneingabe die Physik zu triggern
-          //console.log(einzelGeo.name);
-        }
-      }*/
-
       gameRoot.addChild(kugel);
-      gameRoot.getComponent(ƒ.ComponentAudio).play(true);
+      //gameRoot.getComponent(ƒ.ComponentAudio).play(true);
+      audioComponentShoot.play(true);
       ƒ.Physics.adjustTransforms(gameRoot);
     }
     if (_event.code == ƒ.KEYBOARD_CODE.T) {
@@ -337,18 +489,36 @@ namespace Endabgabe_360_Defender {
 
 
   function update(_event: Event): void {
+
     
 
     for (let lanes of lanesRoot.getChildren() as QuadLane[]) {
+      let counter: number = 0;
       for (let gegnerGeo of lanes.getChildren() as Gegnergeometrie[]) {
-        gegnerGeo.move();
-        //console.log(einzelGeo.name);
+        if(gegnerGeo.getPosX() < 1)
+        {
+          let einzelgeo: ƒ.Node[]  = gegnerGeo.getChildren();
+          einzelgeo.forEach(element => {
+            if(element.getComponent(ƒ.ComponentRigidbody)!= null)
+            element.getComponent(ƒ.ComponentRigidbody).setScaling(ƒ.Vector3.ZERO()); 
+          });
+          lanes.removeChild(gegnerGeo);
+          score -= 5;
+          createNewEnemys();
+          document.getElementById("myScore").innerHTML = "Score : " + score;
+        }
+       
+        gegnerGeo.move();  
       }
     //Bewegung der Geometrie etc.
 
+
+    
+
+    
       canon.mtxLocal.rotateZ(ctrRotationX.getOutput()); //Z Achse weil Objekt gedreht wurde --> X Achse ist jetzt die Z Achse
       canon.mtxLocal.rotateX(ctrRotationY.getOutput());
-      canon.mtxLocal.rotation.y = 0;
+      canon.mtxLocal.rotation = new ƒ.Vector3(canon.mtxLocal.rotation.x, 0, canon.mtxLocal.rotation.z);
       ctrRotationX.setInput(0);
       ctrRotationY.setInput(0);
 
