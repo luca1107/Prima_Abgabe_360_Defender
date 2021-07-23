@@ -360,13 +360,20 @@ namespace Endabgabe_360_Defender {
 
     if (schwierigkeit_schwer)
     {
-      if (score % 10 == 0 && score > 0)
-      createNewEnemys();
+      if (score % 12 == 0 && score > 0)
+      {
+        score++;
+        createNewEnemys();
+      }
+      
     }
     else
     {
-      if (score % 6 == 0 && score > 0)
-      createNewEnemys();
+      if (score % 8 == 0 && score > 0)
+      {
+        score++;
+        createNewEnemys();
+      }
     }
 
     document.getElementById("myScore").innerHTML = "Score : " + score;
@@ -377,7 +384,6 @@ namespace Endabgabe_360_Defender {
   function createNewEnemys(): void {
     audioComponentNewEnemy.play(true);
     let lanes: ƒ.Node[] = lanesRoot.getChildren();
-   
     
     let i: number = Math.round(Math.random() * 4);
     if (schwierigkeit_schwer)
@@ -386,39 +392,15 @@ namespace Endabgabe_360_Defender {
         //Setup LanePositions
 
         case 0:
-          lanes[i].getChildren().forEach(element => {
-            element.getComponent(ƒ.ComponentRigidbody).activate(false);
-            element.getComponent(ƒ.ComponentRigidbody).setScaling(ƒ.Vector3.ZERO());
-            element.removeComponent(element.getComponent(ƒ.ComponentRigidbody));
-          });
-          lanes[i].removeAllChildren();
           lanes[i].addChild(new Gegnergeometrie("enemy", new ƒ.Vector3(-3, 0, 1), new ƒ.Vector3(1, 1, 1), true, 3));
           break;
         case 1:
-          lanes[i].getChildren().forEach(element => {
-            element.getComponent(ƒ.ComponentRigidbody).activate(false);
-            element.getComponent(ƒ.ComponentRigidbody).setScaling(ƒ.Vector3.ZERO());
-            element.removeComponent(element.getComponent(ƒ.ComponentRigidbody));
-          });
-          lanes[i].removeAllChildren();
           lanes[i].addChild(new Gegnergeometrie("enemy", new ƒ.Vector3(3, 0, 1), new ƒ.Vector3(1, 1, 1), false, 3));
           break;
           case 2:
-            lanes[i].getChildren().forEach(element => {
-              element.getComponent(ƒ.ComponentRigidbody).activate(false);
-              element.getComponent(ƒ.ComponentRigidbody).setScaling(ƒ.Vector3.ZERO());
-              element.removeComponent(element.getComponent(ƒ.ComponentRigidbody));
-            });
-            lanes[i].removeAllChildren();
             lanes[i].addChild(new Gegnergeometrie("enemy", new ƒ.Vector3(3, 0, 1), new ƒ.Vector3(1, 1, 1), false, 3));
             break;
           case 3:
-            lanes[i].getChildren().forEach(element => {
-              element.getComponent(ƒ.ComponentRigidbody).activate(false);
-              element.getComponent(ƒ.ComponentRigidbody).setScaling(ƒ.Vector3.ZERO());
-              element.removeComponent(element.getComponent(ƒ.ComponentRigidbody));
-            });
-            lanes[i].removeAllChildren(); 
             lanes[i].addChild(new Gegnergeometrie("enemy", new ƒ.Vector3(-3, 0, 1), new ƒ.Vector3(1, 1, 1), true, 3));
             break;
 
@@ -430,39 +412,15 @@ namespace Endabgabe_360_Defender {
         //Setup LanePositions
 
         case 0:
-          lanes[i].getChildren().forEach(element => {
-            element.getComponent(ƒ.ComponentRigidbody).activate(false);
-            element.getComponent(ƒ.ComponentRigidbody).setScaling(ƒ.Vector3.ZERO());
-            element.removeComponent(element.getComponent(ƒ.ComponentRigidbody));
-          });
-          lanes[i].removeAllChildren();
           lanes[i].addChild(new Gegnergeometrie("enemy", new ƒ.Vector3(-3, 0, 1), new ƒ.Vector3(1, 1, 1), true, 2));
           break;
         case 1:
-          lanes[i].getChildren().forEach(element => {
-            element.getComponent(ƒ.ComponentRigidbody).activate(false);
-            element.getComponent(ƒ.ComponentRigidbody).setScaling(ƒ.Vector3.ZERO());
-            element.removeComponent(element.getComponent(ƒ.ComponentRigidbody));
-          });
-          lanes[i].removeAllChildren();
           lanes[i].addChild(new Gegnergeometrie("enemy", new ƒ.Vector3(3, 0, 1), new ƒ.Vector3(1, 1, 1), false, 2));
           break;
           case 2:
-            lanes[i].getChildren().forEach(element => {
-              element.getComponent(ƒ.ComponentRigidbody).activate(false);
-              element.getComponent(ƒ.ComponentRigidbody).setScaling(ƒ.Vector3.ZERO());
-              element.removeComponent(element.getComponent(ƒ.ComponentRigidbody));
-            });
-            lanes[i].removeAllChildren();
             lanes[i].addChild(new Gegnergeometrie("enemy", new ƒ.Vector3(3, 0, 1), new ƒ.Vector3(1, 1, 1), false, 2));
             break;
           case 3:
-            lanes[i].getChildren().forEach(element => {
-              element.getComponent(ƒ.ComponentRigidbody).activate(false);
-              element.getComponent(ƒ.ComponentRigidbody).setScaling(ƒ.Vector3.ZERO());
-              element.removeComponent(element.getComponent(ƒ.ComponentRigidbody));
-            });
-            lanes[i].removeAllChildren();  
             lanes[i].addChild(new Gegnergeometrie("enemy", new ƒ.Vector3(-3, 0, 1), new ƒ.Vector3(1, 1, 1), true, 2));
             break;
 
@@ -513,7 +471,7 @@ namespace Endabgabe_360_Defender {
             element.getComponent(ƒ.ComponentRigidbody).setScaling(ƒ.Vector3.ZERO()); 
           });
           lanes.removeChild(gegnerGeo);
-          score -= 5;
+          score -= 2;
           createNewEnemys();
           document.getElementById("myScore").innerHTML = "Score : " + score;
         }

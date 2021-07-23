@@ -2,6 +2,7 @@
 var Endabgabe_360_Defender;
 (function (Endabgabe_360_Defender) {
     var ƒ = FudgeCore;
+    //import nameJson from "../L06_360_Defender/";
     window.addEventListener("load", init);
     let viewport = new ƒ.Viewport();
     let gameRoot = new ƒ.Node("GameRoot");
@@ -269,12 +270,16 @@ var Endabgabe_360_Defender;
         _event.cmpRigidbody.getContainer().removeComponent(_event.cmpRigidbody.getContainer().getComponent(ƒ.ComponentTransform));*/
         gameRoot.removeChild(_event.cmpRigidbody.getContainer());
         if (schwierigkeit_schwer) {
-            if (score % 10 == 0 && score > 0)
+            if (score % 12 == 0 && score > 0) {
+                score++;
                 createNewEnemys();
+            }
         }
         else {
-            if (score % 6 == 0 && score > 0)
+            if (score % 8 == 0 && score > 0) {
+                score++;
                 createNewEnemys();
+            }
         }
         document.getElementById("myScore").innerHTML = "Score : " + score;
     }
@@ -286,39 +291,15 @@ var Endabgabe_360_Defender;
             switch (i) {
                 //Setup LanePositions
                 case 0:
-                    lanes[i].getChildren().forEach(element => {
-                        element.getComponent(ƒ.ComponentRigidbody).activate(false);
-                        element.getComponent(ƒ.ComponentRigidbody).setScaling(ƒ.Vector3.ZERO());
-                        element.removeComponent(element.getComponent(ƒ.ComponentRigidbody));
-                    });
-                    lanes[i].removeAllChildren();
                     lanes[i].addChild(new Endabgabe_360_Defender.Gegnergeometrie("enemy", new ƒ.Vector3(-3, 0, 1), new ƒ.Vector3(1, 1, 1), true, 3));
                     break;
                 case 1:
-                    lanes[i].getChildren().forEach(element => {
-                        element.getComponent(ƒ.ComponentRigidbody).activate(false);
-                        element.getComponent(ƒ.ComponentRigidbody).setScaling(ƒ.Vector3.ZERO());
-                        element.removeComponent(element.getComponent(ƒ.ComponentRigidbody));
-                    });
-                    lanes[i].removeAllChildren();
                     lanes[i].addChild(new Endabgabe_360_Defender.Gegnergeometrie("enemy", new ƒ.Vector3(3, 0, 1), new ƒ.Vector3(1, 1, 1), false, 3));
                     break;
                 case 2:
-                    lanes[i].getChildren().forEach(element => {
-                        element.getComponent(ƒ.ComponentRigidbody).activate(false);
-                        element.getComponent(ƒ.ComponentRigidbody).setScaling(ƒ.Vector3.ZERO());
-                        element.removeComponent(element.getComponent(ƒ.ComponentRigidbody));
-                    });
-                    lanes[i].removeAllChildren();
                     lanes[i].addChild(new Endabgabe_360_Defender.Gegnergeometrie("enemy", new ƒ.Vector3(3, 0, 1), new ƒ.Vector3(1, 1, 1), false, 3));
                     break;
                 case 3:
-                    lanes[i].getChildren().forEach(element => {
-                        element.getComponent(ƒ.ComponentRigidbody).activate(false);
-                        element.getComponent(ƒ.ComponentRigidbody).setScaling(ƒ.Vector3.ZERO());
-                        element.removeComponent(element.getComponent(ƒ.ComponentRigidbody));
-                    });
-                    lanes[i].removeAllChildren();
                     lanes[i].addChild(new Endabgabe_360_Defender.Gegnergeometrie("enemy", new ƒ.Vector3(-3, 0, 1), new ƒ.Vector3(1, 1, 1), true, 3));
                     break;
             }
@@ -327,39 +308,15 @@ var Endabgabe_360_Defender;
             switch (i) {
                 //Setup LanePositions
                 case 0:
-                    lanes[i].getChildren().forEach(element => {
-                        element.getComponent(ƒ.ComponentRigidbody).activate(false);
-                        element.getComponent(ƒ.ComponentRigidbody).setScaling(ƒ.Vector3.ZERO());
-                        element.removeComponent(element.getComponent(ƒ.ComponentRigidbody));
-                    });
-                    lanes[i].removeAllChildren();
                     lanes[i].addChild(new Endabgabe_360_Defender.Gegnergeometrie("enemy", new ƒ.Vector3(-3, 0, 1), new ƒ.Vector3(1, 1, 1), true, 2));
                     break;
                 case 1:
-                    lanes[i].getChildren().forEach(element => {
-                        element.getComponent(ƒ.ComponentRigidbody).activate(false);
-                        element.getComponent(ƒ.ComponentRigidbody).setScaling(ƒ.Vector3.ZERO());
-                        element.removeComponent(element.getComponent(ƒ.ComponentRigidbody));
-                    });
-                    lanes[i].removeAllChildren();
                     lanes[i].addChild(new Endabgabe_360_Defender.Gegnergeometrie("enemy", new ƒ.Vector3(3, 0, 1), new ƒ.Vector3(1, 1, 1), false, 2));
                     break;
                 case 2:
-                    lanes[i].getChildren().forEach(element => {
-                        element.getComponent(ƒ.ComponentRigidbody).activate(false);
-                        element.getComponent(ƒ.ComponentRigidbody).setScaling(ƒ.Vector3.ZERO());
-                        element.removeComponent(element.getComponent(ƒ.ComponentRigidbody));
-                    });
-                    lanes[i].removeAllChildren();
                     lanes[i].addChild(new Endabgabe_360_Defender.Gegnergeometrie("enemy", new ƒ.Vector3(3, 0, 1), new ƒ.Vector3(1, 1, 1), false, 2));
                     break;
                 case 3:
-                    lanes[i].getChildren().forEach(element => {
-                        element.getComponent(ƒ.ComponentRigidbody).activate(false);
-                        element.getComponent(ƒ.ComponentRigidbody).setScaling(ƒ.Vector3.ZERO());
-                        element.removeComponent(element.getComponent(ƒ.ComponentRigidbody));
-                    });
-                    lanes[i].removeAllChildren();
                     lanes[i].addChild(new Endabgabe_360_Defender.Gegnergeometrie("enemy", new ƒ.Vector3(-3, 0, 1), new ƒ.Vector3(1, 1, 1), true, 2));
                     break;
             }
@@ -396,7 +353,7 @@ var Endabgabe_360_Defender;
                             element.getComponent(ƒ.ComponentRigidbody).setScaling(ƒ.Vector3.ZERO());
                     });
                     lanes.removeChild(gegnerGeo);
-                    score -= 5;
+                    score -= 2;
                     createNewEnemys();
                     document.getElementById("myScore").innerHTML = "Score : " + score;
                 }
