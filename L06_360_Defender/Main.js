@@ -34,7 +34,7 @@ var Endabgabe_360_Defender;
     ctrRotationX.setDelay(100);
     function init(_event) {
         const canvas = document.querySelector("canvas");
-        document.getElementById("myScore").innerHTML = "Score" + score;
+        document.getElementById("myScore").innerHTML = "Score " + score;
         document.getElementById("btnNormal").addEventListener("click", handleButtonNormal);
         document.getElementById("btnSchwer").addEventListener("click", handleButtonSchwer);
         document.getElementById("btnStart").addEventListener("click", handleButtonStart);

@@ -40,7 +40,7 @@ namespace Endabgabe_360_Defender {
 
   function init(_event: Event): void {
     const canvas: HTMLCanvasElement = document.querySelector("canvas");
-    document.getElementById("myScore").innerHTML = "Score" + score;
+    document.getElementById("myScore").innerHTML = "Score " + score;
     document.getElementById("btnNormal").addEventListener("click", handleButtonNormal);
     document.getElementById("btnSchwer").addEventListener("click", handleButtonSchwer);
     document.getElementById("btnStart").addEventListener("click", handleButtonStart);
